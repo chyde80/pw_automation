@@ -1,0 +1,43 @@
+{
+  "name": "pw-automation",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Playwright test suite for https://the-internet.herokuapp.com",
+  "scripts": {
+    "test": "playwright test",
+    "test:chromium": "playwright test --project=chromium",
+    "test:firefox": "playwright test --project=firefox",
+    "test:webkit": "playwright test --project=webkit",
+    "test:headed": "playwright test --headed",
+    "test:trace": "playwright test --trace on",
+    "test:grep": "playwright test --project=chromium --grep",
+    "test:ui": "playwright test --ui",
+    "test:debug": "playwright test --debug",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome lint .",
+    "lint:fix": "biome lint --write .",
+    "format": "biome format --write .",
+    "format:check": "biome format .",
+    "check": "biome check .",
+    "check:fix": "biome check --write .",
+    "clean": "rimraf node_modules dist test-results playwright-report allure-results allure-report blob-report",
+    "report": "playwright show-report",
+    "allure:generate": "allure generate allure-results --clean --output allure-report",
+    "allure:open": "allure open allure-report",
+    "allure:clean": "rimraf allure-results allure-report",
+    "report:allure": "npm run allure:generate && npm run allure:open",
+    "codegen": "playwright codegen https://the-internet.herokuapp.com",
+    "baseline": "playwright test tests/visual-diff.spec.ts --project=chromium --update-snapshots",
+    "install:browsers": "playwright install --with-deps"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
+    "@biomejs/biome": "^2.6.6",
+    "@playwright/test": "^1.65.0",
+    "@types/node": "^26.6.6",
+    "allure": "^3.33.0",
+    "allure-playwright": "^3.14.0",
+    "rimraf": "^6.1.4",
+    "typescript": "^7.0.2"
+  }
+}

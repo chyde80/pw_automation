@@ -1,0 +1,63 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.6.6/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "ignoreUnknown": false,
+    "includes": [
+      "**",
+      "!**/node_modules",
+      "!**/test-results",
+      "!**/playwright-report",
+      "!**/allure-results",
+      "!**/allure-report",
+      "!**/blob-report",
+      "!**/package-lock.json"
+    ]
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 100
+  },
+  "linter": {
+    "enabled": true,
+    "domains": {
+      "playwright": "recommended",
+      "test": "recommended"
+    },
+    "rules": {
+      "preset": "recommended",
+      "suspicious": {
+        "noPlaywrightForceOption": "error",
+        "noPlaywrightNetworkidle": "error",
+        "noPlaywrightPagePause": "error",
+        "noPlaywrightWaitForNavigation": "error",
+        "noPlaywrightWaitForTimeout": "error"
+      },
+      "style": {
+        "noPlaywrightElementHandle": "error",
+        "noPlaywrightEval": "error"
+      }
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single",
+      "trailingCommas": "all",
+      "semicolons": "always"
+    }
+  },
+  "assist": {
+    "enabled": true,
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
+  }
+}
