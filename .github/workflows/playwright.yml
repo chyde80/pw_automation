@@ -16,10 +16,12 @@ jobs:
   test:
     timeout-minutes: 30
     runs-on: ubuntu-latest
+    outputs:
+      allure_report: ${{ steps.allure.outputs.generated }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: npm
@@ -39,7 +41,18 @@ jobs:
             echo "No Allure results found; skipping report generation."
           fi
 
-      - uses: actions/upload-artifact@v4
+      - name: Check Allure report
+        id: allure
+        if: ${{ !cancelled() }}
+        run: |
+          if [ -f allure-report/index.html ]; then
+            echo "generated=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "generated=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v7
         if: ${{ !cancelled() }}
         with:
           name: playwright-report
@@ -47,10 +60,43 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
 
-      - uses: actions/upload-artifact@v4
-        if: ${{ !cancelled() }}
+      # archive: false keeps the self-contained report as one downloadable HTML
+      # file, so the artifact is not wrapped in a zip.
+      - name: Prepare Allure report artifact
+        if: ${{ !cancelled() && steps.allure.outputs.generated == 'true' }}
+        run: cp allure-report/index.html allure-report.html
+
+      - name: Upload Allure report
+        uses: actions/upload-artifact@v7
+        if: ${{ !cancelled() && steps.allure.outputs.generated == 'true' }}
         with:
-          name: allure-report
-          path: allure-report/
+          path: allure-report.html
+          archive: false
           if-no-files-found: ignore
           retention-days: 7
+
+  deploy-report:
+    if: ${{ !cancelled() && github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.test.outputs.allure_report == 'true' }}
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: allure-report.html
+          path: site
+
+      # The report is a single file, so it just needs the Pages entry point name.
+      - run: mv site/allure-report.html site/index.html
+
+      - uses: actions/configure-pages@v6
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: site
+      - id: deployment
+        uses: actions/deploy-pages@v5

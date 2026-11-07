@@ -15,31 +15,31 @@ npm run test:chromium                # fastest loop
 
 ## Commands
 
-| Command                   | What it does                                      |
-| ------------------------- | ------------------------------------------------- |
-| `npm test`                | Run every spec in every browser project           |
-| `npm run test:chromium`   | Run only the chromium project                     |
-| `npm run test:firefox`    | Run only the firefox project                      |
-| `npm run test:webkit`     | Run only the webkit project                       |
-| `npm run test:headed`     | Run with a visible browser                        |
-| `npm run test:trace`      | Record a trace for every test                     |
-| `npm run test:grep`       | Filter tests by name (e.g. `-- "login"`)          |
-| `npm run test:ui`         | Open Playwright's UI mode                         |
-| `npm run typecheck`       | `tsc --noEmit`                                    |
-| `npm run check`           | Lint, format check, and import sorting            |
-| `npm run check:fix`       | Apply safe lint/format/import fixes               |
-| `npm run lint`            | Lint only                                         |
-| `npm run lint:fix`        | Lint and apply safe fixes                         |
-| `npm run format`          | Format only                                       |
-| `npm run format:check`    | Check formatting without writing                  |
-| `npm run baseline`        | Regenerate the visual-diff screenshot baseline    |
-| `npm run clean`           | Remove dependencies and all generated reports     |
-| `npm run report`          | Open the last Playwright HTML report              |
-| `npm run report:allure`   | Generate and open the Allure report               |
-| `npm run allure:generate` | Generate the Allure report from `allure-results/` |
-| `npm run allure:open`     | Serve the last Allure report                      |
-| `npm run allure:clean`    | Delete Allure results and the generated report    |
-| `npm run codegen`         | Record actions against the site                   |
+| Command                   | What it does                                        |
+| ------------------------- | --------------------------------------------------- |
+| `npm test`                | Run every spec in every browser project             |
+| `npm run test:chromium`   | Run only the chromium project                       |
+| `npm run test:firefox`    | Run only the firefox project                        |
+| `npm run test:webkit`     | Run only the webkit project                         |
+| `npm run test:headed`     | Run with a visible browser                          |
+| `npm run test:trace`      | Record a trace for every test                       |
+| `npm run test:grep`       | Filter tests by name (e.g. `-- "login"`)            |
+| `npm run test:ui`         | Open Playwright's UI mode                           |
+| `npm run typecheck`       | `tsc --noEmit`                                      |
+| `npm run check`           | Lint, format check, and import sorting              |
+| `npm run check:fix`       | Apply safe lint/format/import fixes                 |
+| `npm run lint`            | Lint only                                           |
+| `npm run lint:fix`        | Lint and apply safe fixes                           |
+| `npm run format`          | Format only                                         |
+| `npm run format:check`    | Check formatting without writing                    |
+| `npm run baseline`        | Regenerate the visual-diff screenshot baseline      |
+| `npm run clean`           | Remove dependencies and all generated reports       |
+| `npm run report`          | Open the last Playwright HTML report                |
+| `npm run report:allure`   | Generate the single-file Allure report and serve it |
+| `npm run allure:generate` | Generate `allure-report/index.html` (single file)   |
+| `npm run allure:open`     | Serve the last Allure report                        |
+| `npm run allure:clean`    | Delete Allure results and the generated report      |
+| `npm run codegen`         | Record actions against the site                     |
 
 Point the suite at a different deployment with `BASE_URL`:
 
@@ -50,18 +50,22 @@ BASE_URL=http://localhost:3000 npm test
 ## Reports
 
 Every run writes Playwright's HTML report to `playwright-report/` and Allure
-results to `allure-results/`. Generate and open the Allure report with:
+results to `allure-results/`. Generate the Allure report with:
 
 ```bash
 npm test
-npm run report:allure
+npm run allure:generate
 ```
 
-`allure:generate` writes a static report to `allure-report/`, while
-`allure:open` serves an existing one. The Allure report automatically includes
-Playwright traces, screenshots, videos, and test attachments (such as the axe
-JSON output), plus the base URL, Node, and OS details captured in
-`playwright.config.ts`. Both result directories are ignored by Git.
+`allure:generate` produces a self-contained, single-file report at
+`allure-report/index.html` using Allure's modern **Awesome** UI. Open that file
+directly in any browser — no `allure serve`, local server, or unzipping
+required. The report inlines Playwright traces, screenshots, videos, and test
+attachments (such as the axe JSON output), plus the base URL, Node, and OS
+details captured in `playwright.config.ts`.
+
+`npm run allure:open` is still available if you prefer the served experience.
+Both result directories are ignored by Git.
 
 Allure results are cleared at the start of every run by `src/global-setup.ts`,
 so a report only contains the current run. Set `ALLURE_KEEP_RESULTS=true` to
@@ -134,5 +138,11 @@ tests/
 ## Continuous integration
 
 The GitHub Actions workflow runs `npm run check`, `npm run typecheck`, and the
-full Playwright matrix. It uploads both `playwright-report/` and `allure-report/`
-as artifacts and cancels superseded runs on the same ref.
+full Playwright matrix. It uploads both `playwright-report/` and the
+single-file `allure-report.html` as artifacts and cancels superseded runs on the
+same ref.
+
+On pushes to `main`, the single-file Allure report is also published to GitHub
+Pages, so it can be opened directly at
+<https://chyde80.github.io/pw_automation/> without downloading anything. Pull
+request runs only upload the artifacts.
