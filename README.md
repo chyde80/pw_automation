@@ -1,5 +1,7 @@
 # Playwright suite for the-internet
 
+[![Allure report](https://img.shields.io/badge/Allure_report-live-6c47ff)](https://chyde80.github.io/pw_automation/)
+
 End-to-end tests for <https://the-internet.herokuapp.com>, focused on the
 examples that are genuinely hard to automate: WebSockets, shadow DOM, network
 and console events, visual diffs, and accessibility.
