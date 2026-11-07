@@ -60,11 +60,12 @@ npm run allure:generate
 ```
 
 `allure:generate` produces a self-contained, single-file report at
-`allure-report/index.html` using Allure's modern **Awesome** UI. Open that file
-directly in any browser — no `allure serve`, local server, or unzipping
-required. The report inlines Playwright traces, screenshots, videos, and test
-attachments (such as the axe JSON output), plus the base URL, Node, and OS
-details captured in `playwright.config.ts`.
+`allure-report/index.html` using Allure's modern **Awesome** UI. The
+`singleFile` option lives in `allurerc.mjs`, which also sets the report name.
+Open that file directly in any browser — no `allure serve`, local server, or
+unzipping required. The report inlines Playwright traces, screenshots, videos,
+and test attachments (such as the axe JSON output), plus the base URL, Node, and
+OS details captured in `playwright.config.ts`.
 
 `npm run allure:open` is still available if you prefer the served experience.
 Both result directories are ignored by Git.
@@ -91,6 +92,7 @@ and `typecheck` before the browser matrix.
 
 ```
 playwright.config.ts     # base URL, timeouts, browsers, reporters
+allurerc.mjs             # Allure Awesome single-file report configuration
 biome.json               # lint/format/import-sort configuration
 src/
   global-setup.ts        # clears stale Allure results before each run

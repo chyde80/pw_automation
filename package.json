@@ -22,7 +22,7 @@
     "check:fix": "biome check --write .",
     "clean": "rimraf node_modules dist test-results playwright-report allure-results allure-report allure-report.html blob-report",
     "report": "playwright show-report",
-    "allure:generate": "rimraf allure-report && allure awesome allure-results --single-file --report-name \"pw_automation\" --output allure-report",
+    "allure:generate": "allure generate allure-results --clean --output allure-report",
     "allure:open": "allure open allure-report",
     "allure:clean": "rimraf allure-results allure-report allure-report.html",
     "report:allure": "npm run allure:generate && npm run allure:open",
