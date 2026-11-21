@@ -36,7 +36,7 @@
     "@playwright/test": "^1.65.0",
     "@types/node": "^26.6.6",
     "allure": "^3.33.0",
-    "allure-playwright": "^3.14.0",
+    "allure-playwright": "^3.15.0",
     "rimraf": "^6.1.4",
     "typescript": "^7.0.2"
   }
